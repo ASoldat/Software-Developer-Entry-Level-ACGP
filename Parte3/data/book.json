@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "titulo": "Don Quijote de la Mancha",
+    "autor": "Miguel de Cervantes"
+  },
+  {
+    "id": "2",
+    "titulo": "Fahrenheit 451",
+    "autor": "Ray Bradbury"
+  }
+]

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Libros - Crear y Listar</title>
+  <style>
+    body { margin: 2em; }
+    label { display: block; margin-top: 1em; }
+    input[type="text"] { width: 400px; padding: 0.5em; }
+    button {  padding: 0.5em 1em; }
+    table { border-collapse: collapse; width: 80%; margin-top: 2em; }
+    th, td { border: 1px solid #ccc; padding: 0.5em; text-align: left; }
+  </style>
+</head>
+<body>
+  <!-- Formulario para crear un nuevo libro -->
+  <h1>Crear un nuevo libro</h1>
+  <form id="bookForm">
+    <label for="id">ID:</label>
+    <input type="text" id="id" name="id" required>
+    <label for="titulo">Título:</label>
+    <input type="text" id="titulo" name="titulo" required>
+    <label for="autor">Autor:</label>
+    <input type="text" id="autor" name="autor" required>
+    <button type="submit">Crear libro</button>
+  </form>
+
+  <!-- Tabla para listar los libros -->
+  <h2>Lista de libros</h2>
+  <table id="booksTable">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Título</th>
+        <th>Autor</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Libros son listados aquí -->
+    </tbody>
+  </table>
+
+  <script>
+    // Función para listar libros
+    function fetchBooks() {
+    // Hacer una solicitud GET a la API para obtener la lista de libros
+      fetch('/api/listBooks')
+        .then(res => res.json())
+        .then(books => {
+          const tbody = document.querySelector('#booksTable tbody');
+          tbody.innerHTML = '';
+          books.forEach(book => {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${book.id}</td><td>${book.titulo}</td><td>${book.autor}</td>`;
+            tbody.appendChild(row);
+          });
+        });
+    }
+
+    // Manejar el envío del formulario
+    document.getElementById('bookForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const id = document.getElementById('id').value;
+      const titulo = document.getElementById('titulo').value;
+      const autor = document.getElementById('autor').value;
+      // Crear el libro
+      fetch('/api/createBook', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, titulo, autor })
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert(data.message);
+        fetchBooks();
+        document.getElementById('bookForm').reset();
+      });
+    });
+
+    // Cargar libros al cargar la página
+    fetchBooks();
+  </script>
+</body>
+</html>
